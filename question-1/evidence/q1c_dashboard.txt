@@ -1,0 +1,7 @@
+Q1(c) DASHBOARD EVIDENCE
+=================================
+Fact rows: 1120924
+Dashboard aggregate rows: 65778
+Total revenue: 522865735.75
+Dimensions supported: store, product category, day of week, month/year
+Dashboard query successfully returned revenue grouped by all four requested dimensions.

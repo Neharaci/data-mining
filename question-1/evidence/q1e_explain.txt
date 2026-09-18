@@ -1,0 +1,81 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 10          │
+│                           │
+│         Order By:         │
+│ sum(x.revenue_amount) DESC│
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│          Groups:          │
+│             #0            │
+│             #1            │
+│             #2            │
+│                           │
+│    Aggregates: sum(#3)    │
+│                           │
+│        ~13,516 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          store_id         │
+│         store_name        │
+│       category_name       │
+│       revenue_amount      │
+│                           │
+│        ~13,516 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: LEFT      │
+│                           │
+│        Conditions:        ├────────────────────────────────────────────────────────────────────────┐
+│ category_id = category_id │                                                                        │
+│                           │                                                                        │
+│        ~13,516 rows       │                                                                        │
+└─────────────┬─────────────┘                                                                        │
+┌─────────────┴─────────────┐                                                          ┌─────────────┴─────────────┐
+│         HASH_JOIN         │                                                          │       POSTGRES_SCAN       │
+│    ────────────────────   │                                                          │    ────────────────────   │
+│      Join Type: LEFT      │                                                          │           Table:          │
+│                           │                                                          │     product_categories    │
+│        Conditions:        │                                                          │                           │
+│product_code = product_code│                                                          │        Projections:       │
+│   business_date >= CAST   ├───────────────────────────────────────────┐              │        category_id        │
+│ (valid_from AS TIMESTAMP) │                                           │              │       category_name       │
+│   business_date <= CAST   │                                           │              │                           │
+│  (valid_to AS TIMESTAMP)  │                                           │              │                           │
+│                           │                                           │              │                           │
+│        ~13,516 rows       │                                           │              │         ~148 rows         │
+└─────────────┬─────────────┘                                           │              └───────────────────────────┘
+┌─────────────┴─────────────┐                             ┌─────────────┴─────────────┐
+│         HASH_JOIN         │                             │       POSTGRES_SCAN       │
+│    ────────────────────   │                             │    ────────────────────   │
+│      Join Type: INNER     │                             │      Table: products      │
+│                           │                             │                           │
+│        Conditions:        │                             │        Projections:       │
+│    store_id = store_id    ├──────────────┐              │        product_code       │
+│                           │              │              │         valid_from        │
+│                           │              │              │          valid_to         │
+│                           │              │              │        category_id        │
+│                           │              │              │                           │
+│        ~13,516 rows       │              │              │        ~1,264 rows        │
+└─────────────┬─────────────┘              │              └───────────────────────────┘
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│        READ_PARQUET       ││       POSTGRES_SCAN       │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││       Table: stores       │
+│        READ_PARQUET       ││                           │
+│                           ││        Projections:       │
+│        Projections:       ││          store_id         │
+│          store_id         ││         store_name        │
+│        product_code       ││                           │
+│       business_date       ││                           │
+│       revenue_amount      ││                           │
+│                           ││                           │
+│        ~13,516 rows       ││          ~93 rows         │
+└───────────────────────────┘└───────────────────────────┘

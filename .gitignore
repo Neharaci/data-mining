@@ -1,0 +1,12 @@
+# Exam/source datasets
+**/data/
+*.csv
+*.parquet
+
+# Python
+__pycache__/
+*.pyc
+
+# Local/generated files
+*.db
+*.sqlite

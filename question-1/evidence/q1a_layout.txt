@@ -1,0 +1,14 @@
+Q1(a) OBJECT STORE LAYOUT EVIDENCE
+==================================
+Raw source:
+Total source files: 4457
+Total source bytes: 68706877
+Partition layout: raw/sales/store_id={store_id}/year={year}/month={month}/sales.parquet
+S01 October 2024:
+Source files: 31
+Source bytes: 846899
+Object-store partition files: 
+Object-store partition bytes: 184144
+Flat layout could require inspection of 4457 files / 68706877 bytes.
+Partitioned layout for S01 October targets 1 file / 184144 bytes.
+Object-store partition files: 1

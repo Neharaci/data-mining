@@ -1,0 +1,116 @@
+Q2(e) FULL-CORPUS SKEW AND NIGHTLY COST
+========================================
+
+CORPUS
+------
+Total notices: 12,000
+Total portals: 260
+
+PORTAL SIZE SKEW
+----------------
+Top 1 portal: 1,426 notices = 11.88%
+Top 5 portals: 4,568 notices = 38.07%
+Top 10 portals: 7,076 notices = 58.97%
+Top 20 portals: 8,098 notices = 67.48%
+
+This shows that notice volume is not uniformly distributed across
+the 260 portals.
+
+CANDIDATE-WORK SKEW
+-------------------
+LSH operating point: threshold 0.55
+Total candidate pairs: 10,441,502
+Candidate-generation wall-clock time: 18.885 seconds
+
+Top candidate-producing portals:
+
+P094  1,295,489 = 12.41%
+P002    814,076 =  7.80%
+P005    806,818 =  7.73%
+P001    754,725 =  7.23%
+P006    665,874 =  6.38%
+
+Top 5 portals: 41.54% of candidate work.
+
+Top 10 portals: 62.37% of candidate work.
+
+Top 20 portals: 70.75% of candidate work.
+
+INTERPRETATION
+--------------
+The skew is visible both in the notice population and in candidate
+generation. A relatively small group of portals contributes a large
+fraction of retrieval work.
+
+The mechanical reason is that each notice participates in LSH
+candidate generation. Portals with disproportionately many notices
+therefore create more candidate lookups and pair comparisons.
+Similar or repetitive portal content can also increase bucket
+collisions and candidate generation.
+
+20-MINUTE REQUIREMENT
+---------------------
+The measured full-corpus LSH candidate-generation stage at the
+0.55 operating point took 18.885 seconds on the test machine.
+This is substantially below the 20-minute nightly requirement.
+
+The measurement covers candidate generation and not an end-to-end
+production ingestion/rebuild pipeline, so the remaining pipeline
+stages must also be budgeted before claiming a complete nightly
+20-minute guarantee.
+
+MITIGATION
+----------
+Use the LSH structure for sublinear candidate retrieval and retain
+the exact normalized-word Jaccard >= 0.65 decision as the final
+merge rule.
+
+For skewed portals, use portal-aware batching/sharding of retrieval
+work so that the highest-volume portals do not create a single
+serial bottleneck. Process portal partitions independently and
+combine their candidate results.
+
+The mitigation preserves the same retrieval threshold and exact
+merge threshold, so retrieval quality is not intentionally traded
+away merely to handle portal skew.
+
+RETRIEVAL-QUALITY PRICE
+-----------------------
+At LSH threshold 0.55:
+
+True labelled same-pair survival:
+221 / 279 = 79.21%
+
+Labelled different pairs surviving:
+147 / 621
+
+Candidate reduction:
+85.497%
+
+Thus the skew mitigation is applied to execution organization rather
+than by raising the LSH threshold, because raising the threshold
+would reduce candidate workload but would also lose more true
+duplicate pairs.
+
+FINAL DESIGN
+------------
+LSH threshold 0.55
+        |
+        v
+Candidate retrieval
+        |
+        v
+Portal-aware batching/sharding
+        |
+        v
+Exact normalized-word Jaccard
+        |
+        v
+Jaccard >= 0.65
+        |
+        v
+Duplicate / same opportunity
+
+Stable opportunity IDs are assigned independently of individual
+source copies so that rerunning ingestion does not make a new ID
+for the same opportunity.

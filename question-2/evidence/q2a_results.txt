@@ -1,0 +1,73 @@
+Q2(a) SIMILARITY REPRESENTATION AND THRESHOLD EVIDENCE
+=======================================================
+
+CORPUS
+------
+Total notices: 12000
+Labelled pairs: 900
+Same pairs: 279 (31.0%)
+Different pairs: 621 (69.0%)
+
+REPRESENTATION COMPARISON
+-------------------------
+Representation 1: normalized word-token Jaccard
+Same-pair mean similarity: 0.736710
+Different-pair mean similarity: 0.448285
+
+Representation 2: normalized character 3-gram Jaccard
+Same-pair mean similarity: 0.805607
+Different-pair mean similarity: 0.597172
+
+Chosen representation:
+Normalized word-token sets with Jaccard similarity.
+
+Reason:
+Word Jaccard showed greater separation between same and different
+labelled pairs than character 3-gram Jaccard.
+
+NORMALIZATION
+-------------
+- Convert text to lowercase.
+- Remove punctuation.
+- Remove tender/reference-number patterns.
+- Remove generic tender/portal boilerplate such as Tender Notice,
+  e-Tender, NIT and Corrigendum.
+- Use title + body as the main text representation.
+
+OTHER SIGNALS
+-------------
+Estimated value is treated as a supporting signal, not a primary
+identifier.
+Closing date is treated as a supporting signal because a corrigendum
+can change the closing date.
+Portal ID is not required to match because the same opportunity may
+appear on different portals.
+
+JACCARD DEFINITION
+------------------
+J(A,B) = |A intersection B| / |A union B|
+
+OPERATING THRESHOLD
+-------------------
+Chosen text similarity threshold: 0.65
+
+At threshold 0.65 on the 900 trusted labelled pairs:
+TP = 192
+FP = 0
+FN = 87
+TN = 621
+Precision = 1.000
+Recall = 0.688
+False Merge Rate = 0.000
+
+RATIONALE
+---------
+False merges are explicitly more costly than missed merges.
+Therefore the operating point prioritizes avoiding false merges.
+
+The 0.65 threshold produced zero false merges on the labelled
+evaluation set while retaining 68.8% of adjudicated same pairs.
+
+This threshold is used for the final similarity decision after
+candidate retrieval. LSH parameters are a separate retrieval-quality
+decision and are evaluated in Q2(c).

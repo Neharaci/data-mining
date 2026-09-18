@@ -1,0 +1,10 @@
+Q1(d) HISTORICAL PRICE EVIDENCE
+====================================
+Product: Britannia Cream Biscuit 60g
+Product code: P100049
+Product SK: 1008
+Report date: 2024-03-15
+MRP: 74.98
+Historical selling price: 66.95
+Applicable revision: 2022-01-01 to 2024-06-19
+Query selects price_revision using report date between effective_from and effective_to.

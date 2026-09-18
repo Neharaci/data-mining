@@ -1,0 +1,8 @@
+Q1(b) IDEMPOTENT LOAD EVIDENCE
+=================================
+
+Run 1: Rows=1120924 | SHA256=48c7b1ded469c41f2b10de7523c6f66adad51438aaf0e6b4fce89e2439b48c61
+Run 2: Rows=1120924 | SHA256=48c7b1ded469c41f2b10de7523c6f66adad51438aaf0e6b4fce89e2439b48c61
+Run 3: Rows=1120924 | SHA256=48c7b1ded469c41f2b10de7523c6f66adad51438aaf0e6b4fce89e2439b48c61
+
+Result: All three runs produced identical row counts and canonical checksums.

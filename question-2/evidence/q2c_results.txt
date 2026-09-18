@@ -1,0 +1,81 @@
+Q2(c) LSH CANDIDATE RETRIEVAL EVIDENCE
+======================================
+
+CORPUS
+------
+Total notices: 12000
+All possible unique notice pairs: 71994000
+MinHash signature size: 128
+
+LSH OPERATING-POINT RESULTS
+---------------------------
+
+Threshold: 0.50
+Candidate pairs: 21724943
+Candidate fraction: 0.301760
+Candidate reduction: 69.824%
+Same labelled pairs surviving: 237 / 279
+True-pair survival rate: 84.95%
+Different labelled pairs surviving: 235 / 621
+Retrieval time: 23.23 seconds
+
+Threshold: 0.55
+Candidate pairs: 10441502
+Candidate fraction: 0.145033
+Candidate reduction: 85.497%
+Same labelled pairs surviving: 221 / 279
+True-pair survival rate: 79.21%
+Different labelled pairs surviving: 147 / 621
+Retrieval time: 13.24 seconds
+
+Threshold: 0.60
+Candidate pairs: 4944870
+Candidate fraction: 0.068684
+Candidate reduction: 93.132%
+Same labelled pairs surviving: 194 / 279
+True-pair survival rate: 69.53%
+Different labelled pairs surviving: 72 / 621
+Retrieval time: 6.32 seconds
+
+Threshold: 0.65
+Candidate pairs: 1732589
+Candidate fraction: 0.024066
+Candidate reduction: 97.593%
+Same labelled pairs surviving: 160 / 279
+True-pair survival rate: 57.35%
+Different labelled pairs surviving: 30 / 621
+Retrieval time: 2.53 seconds
+
+ADOPTED OPERATING POINT
+-----------------------
+LSH retrieval threshold: 0.55
+Final exact similarity threshold: 0.65
+
+RATIONALE
+---------
+LSH is used only for candidate generation. Its threshold is deliberately
+lower than the final similarity threshold so that likely duplicate
+pairs are not discarded before exact comparison.
+
+At LSH threshold 0.55, the candidate set is reduced from 71,994,000
+possible pairs to 10,441,502 pairs, an 85.497% reduction.
+
+The trusted labelled pairs show 79.21% survival of adjudicated same
+pairs at this operating point.
+
+A higher LSH threshold of 0.65 reduces the candidate set further but
+only retains 57.35% of labelled same pairs, which represents too much
+retrieval loss.
+
+Final merging remains conservative: candidate pairs must pass the
+exact normalized-word Jaccard threshold of 0.65.
+
+ASYMMETRIC RISK
+---------------
+The labelled data contains 621 different pairs and 279 same pairs.
+False merges are more costly than missed merges according to the
+problem statement.
+
+Therefore LSH is treated as a recall-oriented candidate generator,
+while the final exact similarity threshold provides the conservative
+merge decision.

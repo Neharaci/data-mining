@@ -1,0 +1,80 @@
+Q2(d) RELATIONAL HOME AND ACCESS PATH
+=====================================
+
+RELATIONAL DESIGN
+-----------------
+notice_minhash:
+- notice_id PRIMARY KEY
+- signature BYTEA
+
+lsh_buckets:
+- band
+- bucket_hash
+- notice_id
+- PRIMARY KEY (band, bucket_hash, notice_id)
+
+INDEXES
+-------
+idx_lsh_bucket ON lsh_buckets(band, bucket_hash)
+idx_lsh_notice ON lsh_buckets(notice_id)
+
+The retrieval structure is persisted in PostgreSQL so that the
+candidate-generation structure survives pipeline reruns and can be
+queried directly by the analytical system.
+
+DATA LOADED
+-----------
+Trusted labelled notices: 1644
+LSH bucket rows: 52608
+Hash/signature design: 128 hashes represented using 32 bands x 4 rows.
+
+INDEXED QUERY
+-------------
+Query:
+SELECT notice_id
+FROM lsh_buckets
+WHERE band=3
+AND bucket_hash=-5824377118664019526;
+
+Planner chosen path:
+Index Scan using idx_lsh_bucket
+
+Rows returned: 2
+Execution Time: 0.031 ms
+Buffers: shared hit=4
+
+FORCED ALTERNATIVE
+------------------
+Index scans and bitmap scans were disabled.
+
+Planner path:
+Seq Scan on lsh_buckets
+
+Rows returned: 2
+Rows removed by filter: 52606
+Execution Time: 1.593 ms
+Buffers: shared hit=368
+
+COMPARISON
+----------
+The indexed query took 0.031 ms.
+The forced sequential scan took 1.593 ms.
+
+The sequential scan examined the full bucket table and removed
+52,606 non-matching rows, while the index scan used the
+(band, bucket_hash) access path to locate the matching bucket.
+
+The measured execution time was approximately 51.4 times higher
+for the forced sequential scan in this test.
+
+ALTERNATIVE REJECTED
+--------------------
+A sequential scan was rejected for routine candidate retrieval
+because retrieval repeatedly filters by band and bucket_hash.
+The indexed access path avoids scanning unrelated bucket rows.
+
+NOTE
+----
+The indexed test demonstrates the relational access-path behavior
+on the trusted labelled subset used for the retrieval-quality
+experiment.

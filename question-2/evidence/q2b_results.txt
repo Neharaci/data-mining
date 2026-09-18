@@ -1,0 +1,72 @@
+Q2(b) MINHASH SPACE/ACCURACY EVIDENCE
+=====================================
+
+CORPUS
+------
+Total corpus notices: 12000
+Trusted labelled pairs: 900
+Unique notices used in experiment: 1644
+
+The labelled pairs were used as the trusted evaluation set.
+
+MINHASH RESULTS
+---------------
+
+Signature size: 32
+Storage per notice: 32 hash values
+Mean absolute Jaccard error: 0.065754
+Maximum absolute error: 0.297897
+False merges at 0.65: 53
+Missed same pairs at 0.65: 63
+
+Signature size: 64
+Storage per notice: 64 hash values
+Mean absolute Jaccard error: 0.039703
+Maximum absolute error: 0.167870
+False merges at 0.65: 7
+Missed same pairs at 0.65: 88
+
+Signature size: 128
+Storage per notice: 128 hash values
+Mean absolute Jaccard error: 0.031417
+Maximum absolute error: 0.123461
+False merges at 0.65: 4
+Missed same pairs at 0.65: 80
+
+Signature size: 256
+Storage per notice: 256 hash values
+Mean absolute Jaccard error: 0.022464
+Maximum absolute error: 0.112526
+False merges at 0.65: 4
+Missed same pairs at 0.65: 85
+
+ADOPTED SIZE
+------------
+Chosen MinHash signature size: 128 hash values per notice.
+
+REASON
+------
+32 hashes produced 53 false merges and was therefore too inaccurate.
+
+64 hashes reduced false merges to 7.
+
+128 hashes reduced false merges further to 4 and had mean absolute
+Jaccard error of 0.031417.
+
+256 hashes reduced mean error further to 0.022464, but did not reduce
+the observed false merges below 4. It also doubles the signature
+storage compared with 128 hashes.
+
+Therefore 128 hashes was selected as the fixed space/accuracy
+trade-off for the retrieval system.
+
+IMPORTANT
+---------
+The MinHash approximation introduces measurable error compared with
+exact Jaccard. At the 0.65 decision threshold, the 128-hash
+approximation produced 4 false merges on the 900 trusted labelled
+pairs.
+
+The final system will use this fixed 128-hash representation unless
+later retrieval-quality measurements demonstrate that the operating
+point needs adjustment.

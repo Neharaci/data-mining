@@ -1,0 +1,50 @@
+Q1(f) MONTHLY RECONCILIATION EVIDENCE
+
+MONTHLY RESULTS
+2024-01  Finance 38446071.33  Pipeline 38446071.33  Difference 0.00
+2024-02  Finance 34887085.55  Pipeline 34887085.55  Difference 0.00
+2024-03  Finance 42457899.09  Pipeline 41971649.09  Difference 486250.00
+2024-04  Finance 37958457.37  Pipeline 37958457.37  Difference 0.00
+2024-05  Finance 41764716.40  Pipeline 41764716.40  Difference 0.00
+2024-06  Finance 38987082.82  Pipeline 38987082.82  Difference 0.00
+2024-07  Finance 40527291.81  Pipeline 40295160.11  Difference 232131.70
+2024-08  Finance 45252181.75  Pipeline 45252181.75  Difference 0.00
+2024-09  Finance 44615037.46  Pipeline 44615037.46  Difference 0.00
+2024-10  Finance 56359195.92  Pipeline 56359195.92  Difference 0.00
+2024-11  Finance 51583838.47  Pipeline 51583838.47  Difference 0.00
+2024-12  Finance 50745209.00  Pipeline 50745259.48  Difference -50.48
+
+MATCHING MONTHS
+9 of 12 months reconcile exactly.
+
+MARCH INVESTIGATION
+Difference: INR 486250.00
+All 12 stores have all 31 March daily source files.
+March fact rows: 91711.
+March unique (bill_no,line_no) keys: 91711.
+Duplicate rows: 0.
+March resend files were byte-identical to originals.
+Revenue definition tests did not reproduce the Finance figure.
+Classification: SOURCE DATA ISSUE / EXACT CAUSE UNRESOLVED FROM PROVIDED DATA.
+
+JULY INVESTIGATION
+Difference: INR 232131.70
+S07 has only 28 of 31 July dates.
+Missing S07 dates: July 1, July 2 and July 9.
+Vendor notes document a three-day S07 export gap.
+Classification: SOURCE DATA ISSUE.
+
+DECEMBER INVESTIGATION
+Difference: INR -50.48.
+All 12 stores are present.
+December has 377 source CSV files: 372 base daily files plus 5 resend files.
+All five December resend files were byte-identical to their originals.
+No fractional-cent revenue rows were found.
+Classification: SOURCE DATA ISSUE / EXACT CAUSE UNRESOLVED FROM PROVIDED DATA.
+
+REVENUE DEFINITION
+Revenue includes SALE, RETURN, DISCOUNT and VOID.
+Revenue excludes TAX and TENDER.
+
+FINAL ACTION FOR FINANCE
+Take March, July and December back to Finance for reconciliation.
